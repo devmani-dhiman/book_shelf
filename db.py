@@ -6,3 +6,5 @@ _cursor = con.cursor()
 
 _cursor.execute('''CREATE TABLE books 
                             (id, book name text, author text, category text, summary text, status text)''')
+
+
