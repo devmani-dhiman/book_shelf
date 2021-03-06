@@ -11,28 +11,27 @@ def create_connection(db_file):
     try:
         conn = sqlite3.connect(db_file)
         return conn
-        print("Connection Successful")
-        print(sqlite3.version)
     except Error as e:
         print(e)
     finally:
         if conn:
             print("Function Executed Successfully")
+            print(sqlite3.version)
         else:
             print("Unable to Connect")
 
-conn = create_connection(r'D:\sqlite\db\test.db')
+conn = create_connection(r'D:\sqlite\db\books.db')
 df = pd.read_excel('Booklist.xlsx', header=0, index_col=0)
-print(df.head())
+#print(df.head())
 #conn.cursor().execute("DROP table 'Test Table'")
 new_cols = []
 for column in df.columns:
     cols = "".join(column.split())
     new_cols.append(cols)
 
-print(new_cols)
+#print(new_cols)
 df.columns = new_cols
-print(df.head())
+#print(df.head())
 
-df.to_sql(name='Test Table', con = conn, if_exists='append') 
+df.to_sql(name='Books', con = conn, if_exists='append') 
 #('fail'- Default', 'replace'- To drop and create new)
