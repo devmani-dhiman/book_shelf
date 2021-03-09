@@ -1,22 +1,35 @@
 import streamlit as st
+from streamlit.elements.altair import generate_chart
 import db
-
-current_reading = ['Rework']
-completed = ['The Kite Runner', 'The Psychology of Money', 'Atomic Habbits', 'Harry Potter Serires']
-
-want_to_read = ['Sapiens', 'Angels and Demons', 'Sapiens', 'No Rules Rules']
 
 
 st.header("Welcome to my book shelf.")
 
-selected = st.selectbox("Select", ["Reading", "Competed", "Future Reads"])
+selected = st.selectbox("Select", ["Reading", "Completed", "Future Reads"])
 
-if selected == "Reading":
-    books = db.get_reading()
-    st.write(books) 
+def select_genre():
+    genre = st.selectbox("Genre", ["Fiction", "Non Fiction"])
+    return genre
+
+def select_subCategory():
+    subCategory = st.multiselect("Sub Category", ["Auto Biography", "Crime", "Thriller", "Drama", "Self-Help", "Fantasy"])
+    return subCategory
+
+
+if selected == "Completed":
+    genre = select_genre()
+    subCat = select_subCategory()
+    completed = db.get_completed()
+    st.write(completed)
 
 elif selected == "Future Reads":
+    genre = select_genre()
+    subCat = select_subCategory()
+    want_to_read = db.get_want_to_read()
     st.write(want_to_read)
 
 else:
+    completed = db.get_reading()
+    print(type(completed))
+    print(completed)
     st.write(completed)
