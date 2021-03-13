@@ -1,6 +1,5 @@
 import sqlite3
 from sqlite3 import Error
-import pandas as pd
 
 #_cursor = conn.cursor()
 #_cursor.execute('CREATE TABLE test (id, Book Name text, Author text, Genre text, Sub-category text, Status text, Summary text)')
@@ -40,18 +39,17 @@ def create_connection(db_file):
     finally:
         if conn:
             print("Function Executed Successfully")
-            print(sqlite3.version)
         else:
             print("create_connection failed")
 
 
-def get_all_itens(loc):
+def get_all_items(loc):
     try:
-        conn = create_connection(loc = r'D:\sqlite\db\books.db')
+        conn = create_connection(loc)
         _cursor = conn.cursor()
-        _cursor.execute("Select * from books")
+        _cursor.execute("Select * from Books")
         rows = _cursor.fetchall()
-        return {"count": len(rows), "items": rows}
+        return rows
     except Error as e:
         print('Error: ', e)
         return None
@@ -66,7 +64,7 @@ def get_completed(loc = r'D:\sqlite\db\books.db'):
     try:
         conn = create_connection(loc)
         _cursor = conn.cursor()
-        _cursor.execute("Select * from Books where status = 'C'")
+        _cursor.execute("Select count(*) from Books where status = 'C'")
         rows = _cursor.fetchall()
         return rows
     except Error as e:
@@ -77,6 +75,9 @@ def get_completed(loc = r'D:\sqlite\db\books.db'):
             conn.close()
         else:
             print("get_completed failed")
+
+
+
 
 def get_reading(loc = r'D:\sqlite\db\books.db'):
     try:
@@ -95,13 +96,13 @@ def get_reading(loc = r'D:\sqlite\db\books.db'):
         else:
             print("get_reading failed")
 
+
 def get_want_to_read(loc = r'D:\sqlite\db\books.db'):
     try:
         conn = create_connection(loc)
         _cursor = conn.cursor()
         _cursor.execute("Select * from Books where status = 'F'")
         rows = _cursor.fetchall()
-        conn.close()
         return rows
     except Error as e:
         print('Error: ', e)
@@ -113,13 +114,41 @@ def get_want_to_read(loc = r'D:\sqlite\db\books.db'):
             print("get_want_to_read failed")
 
 
-def genre():
+def get_subCategory():
     try:
         conn = create_connection(r'D:\sqlite\db\books.db')
         _cursor = conn.cursor()
+        _cursor.execute("Select Distinct SubCategory from Books")
+        rows = _cursor.fetchall()
+        return rows
     except Error as e:
         print("Error: ", e)
         return None
 
-    def get_fiction():
-        pass
+    finally:
+        if conn:
+            conn.close()
+        else:
+            print("get_subCategory failed")
+
+
+def book_with_subCategory(subCat, tag, loc = r'D:\sqlite\db\books.db'):
+    try:
+        conn = create_connection(loc)
+        _cursor = conn.cursor()
+        
+        if subCat == "Fiction":
+            _cursor.execute(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}' and Genre = 'Fiction'")
+        else:
+            _cursor.execute(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}'")
+        rows = _cursor.fetchall()
+        return rows
+    except Error as e:
+        print("Here")
+        print("Error: ", e)
+        return None
+    finally:
+        if conn:
+            conn.close()
+        else:
+            print("book_with_subCategory failed")

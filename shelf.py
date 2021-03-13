@@ -1,12 +1,12 @@
-from re import sub
 import streamlit as st
 import db
 
 
 st.header("Welcome to my book shelf.")
 
-selected = st.selectbox("Select", ["Reading", "Completed", "Future Reads"])
+selected = st.selectbox("Select", ["All","Reading", "Completed", "Future Reads"])
 
+tag = ""
 
 def select_subCategory():
     sCategory = db.get_subCategory()
@@ -18,23 +18,24 @@ def select_subCategory():
 
 
 if selected == "Completed":
+    tag = "C" 
     subCat = select_subCategory()
     completed = db.get_completed()
-    to_show = db.book_with_subCategory(subCat)
+    to_show = db.book_with_subCategory(subCat, tag)
     st.write(to_show)
 
 
 elif selected == "Future Reads":
-    subCat = select_subCategory()
+    tag = "F"
     want_to_read = db.get_want_to_read()
     st.write(want_to_read)
 
-else:
+
+elif selected == "Reading":
     completed = db.get_reading()
-    print(type(completed))
-    print(completed)
+    tag = "R"
     st.write(completed)
 
-db.book_with_subCategory("Fiction")
-
-db.get_completed()
+else:
+    all = db.get_all_items(r'D:\sqlite\db\books.db')
+    st.write(all)
