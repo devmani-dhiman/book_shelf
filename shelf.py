@@ -1,12 +1,13 @@
 import streamlit as st
 import db
 
-
 st.header("Welcome to my book shelf.")
 
-selected = st.selectbox("Select", ["All","Reading", "Completed", "Future Reads"])
+selected = st.selectbox(
+    "Select", ["All", "Reading", "Completed", "Future Reads"])
 
 tag = ""
+
 
 def select_subCategory():
     sCategory = db.get_subCategory()
@@ -18,7 +19,7 @@ def select_subCategory():
 
 
 if selected == "Completed":
-    tag = "C" 
+    tag = "C"
     subCat = select_subCategory()
     completed = db.get_completed()
     to_show = db.book_with_subCategory(subCat, tag)
@@ -39,3 +40,10 @@ elif selected == "Reading":
 else:
     all = db.get_all_items(r'D:\sqlite\db\books.db')
     st.write(all)
+
+
+st.markdown("<address>If you want to send your recommendation you can send it to <a href=\"mailto:devmani96@gmail.com\">devmani96@gmail.com</a>  &#128512</address>",
+            unsafe_allow_html=True)
+
+
+st.markdown("If you want to charge your Vocabulary <a href=\"https://twitter.com/learningtoget19\">Click Here</a> &#9889", unsafe_allow_html=True)

@@ -1,5 +1,6 @@
 import sqlite3
 from sqlite3 import Error
+import pandas as pd
 
 #_cursor = conn.cursor()
 #_cursor.execute('CREATE TABLE test (id, Book Name text, Author text, Genre text, Sub-category text, Status text, Summary text)')
@@ -46,10 +47,8 @@ def create_connection(db_file):
 def get_all_items(loc):
     try:
         conn = create_connection(loc)
-        _cursor = conn.cursor()
-        _cursor.execute("Select * from Books")
-        rows = _cursor.fetchall()
-        return rows
+        df = pd.read_sql_query("Select * from Books", conn)
+        return df
     except Error as e:
         print('Error: ', e)
         return None
@@ -63,10 +62,8 @@ def get_all_items(loc):
 def get_completed(loc = r'D:\sqlite\db\books.db'):
     try:
         conn = create_connection(loc)
-        _cursor = conn.cursor()
-        _cursor.execute("Select count(*) from Books where status = 'C'")
-        rows = _cursor.fetchall()
-        return rows
+        df = pd.read_sql_query("Select * from Books where status = 'C'", conn)
+        return df
     except Error as e:
         print('Error: ', e)
         return None
@@ -82,11 +79,8 @@ def get_completed(loc = r'D:\sqlite\db\books.db'):
 def get_reading(loc = r'D:\sqlite\db\books.db'):
     try:
         conn = create_connection(loc)
-        _cursor = conn.cursor()
-        _cursor.execute("Select * from Books where status = 'R'")
-        rows = _cursor.fetchall()
-        conn.close()
-        return rows
+        df = pd.read_sql_query("Select * from Books where status = 'R'", conn)
+        return df
     except Error as e:
         print('Error: ', e)
         return None
@@ -100,10 +94,8 @@ def get_reading(loc = r'D:\sqlite\db\books.db'):
 def get_want_to_read(loc = r'D:\sqlite\db\books.db'):
     try:
         conn = create_connection(loc)
-        _cursor = conn.cursor()
-        _cursor.execute("Select * from Books where status = 'F'")
-        rows = _cursor.fetchall()
-        return rows
+        df = pd.read_sql_query("Select * from Books where status = 'F'", conn)
+        return df
     except Error as e:
         print('Error: ', e)
         return None
@@ -124,9 +116,9 @@ def get_subCategory():
     except Error as e:
         print("Error: ", e)
         return None
-
     finally:
         if conn:
+            _cursor.close()
             conn.close()
         else:
             print("get_subCategory failed")
@@ -138,11 +130,10 @@ def book_with_subCategory(subCat, tag, loc = r'D:\sqlite\db\books.db'):
         _cursor = conn.cursor()
         
         if subCat == "Fiction":
-            _cursor.execute(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}' and Genre = 'Fiction'")
+            df = pd.read_sql_query(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}' and Genre = 'Fiction'", conn)
         else:
-            _cursor.execute(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}'")
-        rows = _cursor.fetchall()
-        return rows
+            df = pd.read_sql_query(f"Select * from Books where SubCategory like '%{subCat}%' and Status = '{tag}'", conn)
+        return df
     except Error as e:
         print("Here")
         print("Error: ", e)
