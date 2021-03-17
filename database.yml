@@ -1,0 +1,14 @@
+development: 
+  adapter: sqlite3
+  database: Books
+
+test:
+  adapter: sqlite3
+  database: Books
+
+production:
+  adapter: postgreql
+  database: Books
+  username: postgre
+  password: Sh@ktimaan1
+  host: localhost

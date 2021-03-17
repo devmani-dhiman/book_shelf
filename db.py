@@ -2,6 +2,7 @@ import sqlite3
 from sqlite3 import Error
 import pandas as pd
 
+
 #_cursor = conn.cursor()
 #_cursor.execute('CREATE TABLE test (id, Book Name text, Author text, Genre text, Sub-category text, Status text, Summary text)')
 
